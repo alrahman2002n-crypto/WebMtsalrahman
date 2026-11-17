@@ -57,9 +57,11 @@ import {
   BookMarked,
   ShieldAlert,
   Layers,
-  Globe
+  Globe,
+  Upload,
+  Image as ImageIcon
 } from 'lucide-react';
-import { createWhatsAppUrl, generateRegistrationNumber } from '../utils/storage';
+import { createWhatsAppUrl, generateRegistrationNumber, processImageUpload } from '../utils/storage';
 import { AdminSummaryDashboard } from './AdminSummaryDashboard';
 import { AdminDeployGuide } from './AdminDeployGuide';
 
@@ -108,6 +110,8 @@ export function AdminPage({
   // School form edit state
   const [schoolForm, setSchoolForm] = useState<SchoolConfig>(school);
   const [schoolSaveNotice, setSchoolSaveNotice] = useState(false);
+  const [photoUploadError, setPhotoUploadError] = useState<string | null>(null);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const [newPasswordInput, setNewPasswordInput] = useState('');
   const [pwSaveNotice, setPwSaveNotice] = useState(false);
 
@@ -311,6 +315,22 @@ export function AdminPage({
     onUpdateSchool(schoolForm);
     setSchoolSaveNotice(true);
     setTimeout(() => setSchoolSaveNotice(false), 2500);
+  };
+
+  const handleHeadmasterPhotoUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setPhotoUploadError(null);
+    setIsUploadingPhoto(true);
+    try {
+      const dataUrl = await processImageUpload(file, 720);
+      setSchoolForm(prev => ({ ...prev, headmasterPhoto: dataUrl }));
+    } catch (err: any) {
+      setPhotoUploadError(err?.message || 'Gagal mengunggah foto.');
+    } finally {
+      setIsUploadingPhoto(false);
+      e.target.value = '';
+    }
   };
 
   // Submit Manual Applicant
@@ -1321,14 +1341,55 @@ function doPost(e) {
                   />
                 </div>
 
-                <div className="space-y-1">
-                  <label className="font-bold text-slate-700 uppercase">URL Foto Kepala Sekolah</label>
-                  <input
-                    type="text"
-                    value={schoolForm.headmasterPhoto}
-                    onChange={(e) => setSchoolForm({ ...schoolForm, headmasterPhoto: e.target.value })}
-                    className="w-full p-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none"
-                  />
+                <div className="lg:col-span-3 p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <label className="font-bold text-slate-700 uppercase flex items-center gap-1.5">
+                      <ImageIcon className="w-4 h-4 text-emerald-700" />
+                      <span>Foto Kepala Sekolah</span>
+                    </label>
+                    <label className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs cursor-pointer transition-colors shadow-xs w-fit">
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>{isUploadingPhoto ? 'Memproses Foto...' : 'Upload Foto dari Komputer / HP'}</span>
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/*"
+                        onChange={handleHeadmasterPhotoUpload}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                    {/* Thumbnail Preview */}
+                    <div className="w-20 h-24 rounded-xl overflow-hidden border-2 border-white shadow-sm bg-emerald-950 shrink-0 flex items-center justify-center">
+                      {schoolForm.headmasterPhoto ? (
+                        <img
+                          src={schoolForm.headmasterPhoto}
+                          alt={schoolForm.headmasterName}
+                          className="w-full h-full object-cover object-top"
+                        />
+                      ) : (
+                        <ImageIcon className="w-6 h-6 text-slate-400" />
+                      )}
+                    </div>
+
+                    {/* URL / Path Input */}
+                    <div className="flex-1 w-full space-y-1.5">
+                      <input
+                        type="text"
+                        value={schoolForm.headmasterPhoto}
+                        onChange={(e) => setSchoolForm({ ...schoolForm, headmasterPhoto: e.target.value })}
+                        placeholder="Tempel link URL foto (https://...) atau /images/kepsek.jpg"
+                        className="w-full p-2.5 rounded-lg border border-slate-300 bg-white text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+                      />
+                      {photoUploadError && (
+                        <p className="text-xs text-rose-600 font-semibold">{photoUploadError}</p>
+                      )}
+                      <p className="text-[11px] text-slate-500 leading-relaxed">
+                        Anda dapat langsung <strong>Upload Foto</strong> dari perangkat (JPG/PNG, otomatis dikompresi) atau menempelkan tautan URL gambar online / path file di folder <code className="bg-slate-200 px-1 rounded font-mono">public/</code>. Jangan lupa klik <strong>Simpan Perubahan Sekolah</strong> di bawah.
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="lg:col-span-3 space-y-1">

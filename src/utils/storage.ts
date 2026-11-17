@@ -200,3 +200,50 @@ export function setAdminSessionAuth(isAuth: boolean): void {
     console.warn('Failed to set session auth', err);
   }
 }
+
+export function processImageUpload(file: File, maxSize = 720): Promise<string> {
+  return new Promise((resolve, reject) => {
+    if (!file.type.startsWith('image/')) {
+      reject(new Error('File harus berupa gambar (JPG, PNG, atau WebP).'));
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      reject(new Error('Ukuran gambar terlalu besar (maksimal 10 MB).'));
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Gagal membaca file gambar.'));
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('Format gambar tidak valid atau rusak.'));
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxSize || height > maxSize) {
+          if (width > height) {
+            height = Math.round((height * maxSize) / width);
+            width = maxSize;
+          } else {
+            width = Math.round((width * maxSize) / height);
+            height = maxSize;
+          }
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          resolve(event.target?.result as string);
+          return;
+        }
+        ctx.drawImage(img, 0, 0, width, height);
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+        resolve(compressedDataUrl);
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  });
+}

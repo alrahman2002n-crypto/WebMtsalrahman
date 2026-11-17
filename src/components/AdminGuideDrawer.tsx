@@ -25,8 +25,10 @@ import {
   HelpCircle,
   Lock,
   ShieldCheck,
-  BarChart3
+  BarChart3,
+  Upload
 } from 'lucide-react';
+import { processImageUpload } from '../utils/storage';
 
 interface AdminGuideDrawerProps {
   isOpen: boolean;
@@ -52,12 +54,30 @@ export function AdminGuideDrawer({
 
   // Form state for school config
   const [editConfig, setEditConfig] = useState<SchoolConfig>(school);
+  const [photoUploadError, setPhotoUploadError] = useState<string | null>(null);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
 
   if (!isOpen) return null;
 
   const handleConfigChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setEditConfig(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleHeadmasterPhotoUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setPhotoUploadError(null);
+    setIsUploadingPhoto(true);
+    try {
+      const dataUrl = await processImageUpload(file, 720);
+      setEditConfig(prev => ({ ...prev, headmasterPhoto: dataUrl }));
+    } catch (err: any) {
+      setPhotoUploadError(err?.message || 'Gagal mengunggah foto.');
+    } finally {
+      setIsUploadingPhoto(false);
+      e.target.value = '';
+    }
   };
 
   const handleSaveConfig = (e: FormEvent) => {
@@ -634,18 +654,48 @@ function doPost(e) {
                   </div>
                 </div>
 
-                <div className="sm:col-span-2 space-y-1">
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-                    URL Foto Kepala Sekolah
-                  </label>
-                  <input
-                    type="text"
-                    name="headmasterPhoto"
-                    value={editConfig.headmasterPhoto}
-                    onChange={handleConfigChange}
-                    placeholder="https://... atau /images/kepala-sekolah.jpg"
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none"
-                  />
+                <div className="sm:col-span-2 p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                      Foto Kepala Sekolah
+                    </label>
+                    <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold cursor-pointer transition-colors">
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>{isUploadingPhoto ? 'Memproses...' : 'Upload Foto'}</span>
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/*"
+                        onChange={handleHeadmasterPhotoUpload}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-14 h-16 rounded-lg overflow-hidden border border-slate-200 bg-emerald-950 shrink-0 flex items-center justify-center">
+                      {editConfig.headmasterPhoto ? (
+                        <img
+                          src={editConfig.headmasterPhoto}
+                          alt={editConfig.headmasterName}
+                          className="w-full h-full object-cover object-top"
+                        />
+                      ) : (
+                        <Image className="w-5 h-5 text-slate-400" />
+                      )}
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <input
+                        type="text"
+                        name="headmasterPhoto"
+                        value={editConfig.headmasterPhoto}
+                        onChange={handleConfigChange}
+                        placeholder="https://... atau /images/kepala-sekolah.jpg"
+                        className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+                      />
+                      {photoUploadError && (
+                        <p className="text-[11px] text-rose-600 font-semibold">{photoUploadError}</p>
+                      )}
+                    </div>
+                  </div>
                 </div>
 
                 <div className="sm:col-span-2 space-y-1">
