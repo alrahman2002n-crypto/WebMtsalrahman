@@ -59,7 +59,8 @@ import {
   Layers,
   Globe,
   Upload,
-  Image as ImageIcon
+  Image as ImageIcon,
+  MapPin
 } from 'lucide-react';
 import { createWhatsAppUrl, generateRegistrationNumber, processImageUpload } from '../utils/storage';
 import { AdminSummaryDashboard } from './AdminSummaryDashboard';
@@ -331,6 +332,21 @@ export function AdminPage({
       setIsUploadingPhoto(false);
       e.target.value = '';
     }
+  };
+
+  const handleGoogleMapsInputChange = (rawValue: string) => {
+    const trimmed = rawValue.trim();
+    const iframeMatch = trimmed.match(/src=["']([^"']+)["']/i);
+    const extractedUrl = iframeMatch ? iframeMatch[1] : trimmed;
+    setSchoolForm(prev => ({ ...prev, googleMapsEmbedUrl: extractedUrl }));
+  };
+
+  const handleGenerateMapFromAddress = () => {
+    const query = [schoolForm.name, schoolForm.address, schoolForm.district, schoolForm.city, schoolForm.province]
+      .filter(Boolean)
+      .join(', ');
+    const embedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+    setSchoolForm(prev => ({ ...prev, googleMapsEmbedUrl: embedUrl }));
   };
 
   // Submit Manual Applicant
@@ -1318,6 +1334,57 @@ function doPost(e) {
                     onChange={(e) => setSchoolForm({ ...schoolForm, address: e.target.value })}
                     className="w-full p-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-600 focus:outline-none"
                   />
+                </div>
+
+                {/* Peta Lokasi Google Maps */}
+                <div className="lg:col-span-3 p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <label className="font-bold text-slate-700 uppercase flex items-center gap-1.5">
+                      <MapPin className="w-4 h-4 text-emerald-700" />
+                      <span>Peta Lokasi Sekolah (Google Maps)</span>
+                    </label>
+                    <button
+                      type="button"
+                      onClick={handleGenerateMapFromAddress}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs cursor-pointer transition-colors shadow-xs w-fit"
+                    >
+                      <MapPin className="w-3.5 h-3.5" />
+                      <span>Cari Peta Otomatis dari Alamat Sekolah</span>
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
+                    <div className="md:col-span-7 space-y-1.5">
+                      <input
+                        type="text"
+                        value={schoolForm.googleMapsEmbedUrl}
+                        onChange={(e) => handleGoogleMapsInputChange(e.target.value)}
+                        placeholder="Tempel link Embed Google Maps (https://www.google.com/maps/embed?...) atau kode <iframe>..."
+                        className="w-full p-2.5 rounded-lg border border-slate-300 bg-white text-xs sm:text-sm font-mono focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+                      />
+                      <p className="text-[11px] text-slate-500 leading-relaxed">
+                        <strong>Cara Termudah:</strong> Klik tombol hijau di kanan atas untuk membuat peta otomatis sesuai Nama &amp; Alamat Sekolah, atau buka Google Maps → cari sekolah Anda → klik <strong>Bagikan (Share)</strong> → pilih tab <strong>Sematkan peta (Embed a map)</strong> → klik <strong>Salin HTML</strong> lalu tempel langsung ke kotak di atas.
+                      </p>
+                    </div>
+
+                    <div className="md:col-span-5 h-36 rounded-xl overflow-hidden border border-slate-300 bg-slate-200">
+                      <iframe
+                        title="Pratinjau Peta Google"
+                        src={
+                          schoolForm.googleMapsEmbedUrl && schoolForm.googleMapsEmbedUrl.trim().length > 0
+                            ? schoolForm.googleMapsEmbedUrl
+                            : `https://maps.google.com/maps?q=${encodeURIComponent(
+                                `${schoolForm.name}, ${schoolForm.address}, ${schoolForm.city}`
+                              )}&t=&z=15&ie=UTF8&iwloc=&output=embed`
+                        }
+                        width="100%"
+                        height="100%"
+                        style={{ border: 0 }}
+                        loading="lazy"
+                        className="w-full h-full"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 {/* Info Kepala Sekolah */}

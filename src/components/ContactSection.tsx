@@ -118,7 +118,13 @@ export function ContactSection({ school, faqs = initialFaqs }: ContactSectionPro
           <div className="lg:col-span-7 bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 shadow-xs h-96 sm:h-[420px] relative">
             <iframe
               title={`Peta Lokasi ${school.name}`}
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.342296564619!2d106.87189!3d-6.34965!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69ec3119198f39%3A0x6b77469a47895e63!2sCibubur%2C%20Ciracas%2C%20East%20Jakarta%20City%2C%20Jakarta!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid"
+              src={
+                school.googleMapsEmbedUrl && school.googleMapsEmbedUrl.trim().length > 0
+                  ? school.googleMapsEmbedUrl
+                  : `https://maps.google.com/maps?q=${encodeURIComponent(
+                      `${school.name}, ${school.address}, ${school.city}, ${school.province}`
+                    )}&t=&z=15&ie=UTF8&iwloc=&output=embed`
+              }
               width="100%"
               height="100%"
               style={{ border: 0 }}
@@ -128,10 +134,17 @@ export function ContactSection({ school, faqs = initialFaqs }: ContactSectionPro
               className="w-full h-full"
             ></iframe>
             
-            <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-xs px-3 py-1.5 rounded-lg border border-slate-200 text-[11px] text-slate-700 font-semibold shadow-xs flex items-center gap-1.5">
-              <span>{school.city}</span>
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                `${school.name}, ${school.address}, ${school.city}`
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="absolute bottom-3 right-3 bg-white/95 hover:bg-white backdrop-blur-xs px-3 py-1.5 rounded-lg border border-slate-200 text-[11px] text-slate-700 hover:text-emerald-800 font-semibold shadow-xs flex items-center gap-1.5 transition-colors"
+            >
+              <span>Buka di Google Maps ({school.city})</span>
               <ExternalLink className="w-3 h-3 text-emerald-700" />
-            </div>
+            </a>
           </div>
 
         </div>
