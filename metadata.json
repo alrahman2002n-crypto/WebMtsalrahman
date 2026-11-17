@@ -1,0 +1,6 @@
+{
+  "name": "Website Sekolah & PPDB Online Terpadu",
+  "description": "Sistem Informasi Sekolah dan Penerimaan Peserta Didik Baru (PPDB) Online terintegrasi Google Sheets, cetak kartu bukti pendaftaran, dan cek status kelulusan.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
