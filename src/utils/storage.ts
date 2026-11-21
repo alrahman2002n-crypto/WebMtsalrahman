@@ -8,7 +8,17 @@ export function getStoredSchoolConfig(): SchoolConfig {
   try {
     const data = localStorage.getItem(SCHOOL_CONFIG_KEY);
     if (data) {
-      return { ...initialSchoolConfig, ...JSON.parse(data) };
+      const parsed = JSON.parse(data);
+      if (parsed.name === 'SMA Bintang Cendekia Mandiri') {
+        const migrated: SchoolConfig = {
+          ...initialSchoolConfig,
+          googleScriptUrl: parsed.googleScriptUrl || initialSchoolConfig.googleScriptUrl,
+          headmasterPhoto: parsed.headmasterPhoto || initialSchoolConfig.headmasterPhoto,
+        };
+        localStorage.setItem(SCHOOL_CONFIG_KEY, JSON.stringify(migrated));
+        return migrated;
+      }
+      return { ...initialSchoolConfig, ...parsed };
     }
   } catch (err) {
     console.warn('Failed to load school config from storage', err);

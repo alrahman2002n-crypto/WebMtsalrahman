@@ -1,23 +1,23 @@
 import { SchoolConfig, Applicant, NewsItem, ProgramItem, ScheduleItem, FaqItem } from '../types';
 
 export const initialSchoolConfig: SchoolConfig = {
-  name: 'SMA Bintang Cendekia Mandiri',
-  subName: 'Sekolah Unggulan Berbasis Karakter, Sains & Akhlak Mulia',
-  level: 'SMA / MA Unggulan',
+  name: 'MTs. Al-Rahman',
+  subName: 'Madrasah Tsanawiyah Unggulan Berbasis Karakter, Sains & Akhlak Mulia',
+  level: 'MTs (Madrasah Tsanawiyah)',
   slogan: 'Mencetak Generasi Berkarakter, Berakhlak Mulia, dan Berdaya Saing Global',
   npsn: '20194821',
   accreditation: 'Akreditasi A (Unggul · Skor 97/100)',
-  address: 'Jl. Gajah Mada No. 225, Kali Nilam, Ketapang',
-  district: 'Kali Nilam',
+  address: 'Jl. Gajah Mada No. 225, Kali Nilam',
+  district: 'Delta Pawan',
   city: 'Ketapang',
-  province: 'Kalimantan Barat',
-  phone: '(021) 8775-9201',
+  province: 'Kalimantan Barat 78813',
+  phone: '(0534) 321-000',
   whatsapp: '6281234567890',
-  email: 'ppdb@bintangcendekia.sch.id',
-  website: 'https://bintangcendekia.sch.id',
+  email: 'ppdb@mtsalrahman.sch.id',
+  website: 'https://mtsalrahman.vercel.app',
   googleMapsEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3987.83631595561!2d109.95575087477877!3d-1.8060565981773646!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e0518a5a6e8f59b%3A0xc0b48b4ca1a3dd9d!2sPondok%20Pesantren%20Hidayaturrahman!5e0!3m2!1sid!2sid!4v1794881631005!5m2!1sid!2sid',
   headmasterName: 'Drs. H. Ahmad Fauzi, M.Pd.',
-  headmasterTitle: 'Kepala Sekolah SMA Bintang Cendekia',
+  headmasterTitle: 'Kepala Madrasah MTs. Al-Rahman',
   headmasterNip: '19740512 199903 1 004',
   headmasterQuote: 'Pendidikan bukan hanya tentang mengisi wadah kosong dengan angka dan rumus, melainkan menyalakan api keingintahuan, memperkokoh adab, serta membekali anak-anak kita dengan keberanian memimpin peradaban masa depan.',
   headmasterPhoto: 'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=800&auto=format&fit=crop',
@@ -136,19 +136,19 @@ export const initialNews: NewsItem[] = [
     category: 'Pengumuman PPDB',
     date: '10 Januari 2026',
     readTime: '3 menit baca',
-    excerpt: 'SMA Bintang Cendekia Mandiri membuka pendaftaran peserta didik baru melalui jalur Prestasi, Tahfidz Al-Qur’an, Afirmasi, dan Jalur Reguler dengan kuota total 240 kursi.',
+    excerpt: 'MTs. Al-Rahman membuka pendaftaran peserta didik baru melalui jalur Prestasi, Tahfidz Al-Qur’an, Afirmasi, dan Jalur Reguler dengan kuota total 240 kursi.',
     imageUrl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800&auto=format&fit=crop',
     author: 'Panitia PPDB 2026',
     featured: true,
     content: [
-      'Penerimaan Peserta Didik Baru (PPDB) Tahun Pelajaran 2026/2027 resmi dibuka secara daring mulai tanggal 10 Januari 2026. Calon pendaftar dapat mengakses sistem pendaftaran terpadu melalui website resmi tanpa perlu antre di sekolah.',
-      'Kepala Sekolah menyatakan bahwa tahun ini sekolah menambah kuota beasiswa khusus bagi siswa penghafal Al-Qur’an minimal 3 Juz dan siswa yang pernah menjuarai kejuaraan sains tingkat kota/provinsi.',
+      'Penerimaan Peserta Didik Baru (PPDB) Tahun Pelajaran 2026/2027 resmi dibuka secara daring mulai tanggal 10 Januari 2026. Calon pendaftar dapat mengakses sistem pendaftaran terpadu melalui website resmi tanpa perlu antre di madrasah.',
+      'Kepala Madrasah menyatakan bahwa tahun ini MTs. Al-Rahman menambah kuota beasiswa khusus bagi siswa penghafal Al-Qur’an minimal 3 Juz dan siswa yang pernah menjuarai kejuaraan sains/keagamaan tingkat kota/provinsi.',
       'Orang tua calon siswa diimbau untuk segera melengkapi berkas digital guna memperlancar proses verifikasi administrasi dan mendapatkan jadwal tes observasi secara tepat waktu.'
     ]
   },
   {
     id: 'news-2',
-    title: 'Siswa SMA Bintang Cendekia Sabet Medali Emas Olimpiade Sains Nasional (OSN) 2026',
+    title: 'Siswa MTs. Al-Rahman Raih Medali Emas Kompetisi Sains Madrasah (KSM) 2026',
     category: 'Prestasi',
     date: '24 Januari 2026',
     readTime: '4 menit baca',
@@ -185,7 +185,7 @@ export const initialNews: NewsItem[] = [
     imageUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800&auto=format&fit=crop',
     author: 'Pembina Pramuka',
     content: [
-      'Gugus Depan SMA Bintang Cendekia menggelar kegiatan Kemah Bakti selama 3 hari di kawasan Bumi Perkemahan Cibubur.',
+      'Gugus Depan MTs. Al-Rahman menggelar kegiatan Kemah Bakti selama 3 hari di kawasan Bumi Perkemahan Ketapang.',
       'Selain latihan kepemimpinan dan navigasi darat, siswa juga menyalurkan 250 paket sembako kepada warga sekitar dan melakukan penanaman 300 bibit pohon buah pelindung.'
     ]
   }
@@ -297,7 +297,7 @@ export const initialFaqs: FaqItem[] = [
   {
     category: 'Biaya & Beasiswa',
     question: 'Apakah ada program beasiswa bebas biaya pendidikan?',
-    answer: 'Ya! SMA Bintang Cendekia menyediakan Program Beasiswa Penuh (Bebas Biaya Pendidikan 100%) untuk penghafal Al-Qur’an minimal 5 Juz mutqin dan peraih Medali Emas/Perak OSN tingkat Nasional. Tersedia juga beasiswa afirmasi potongan SPP untuk calon siswa berprestasi dari keluarga prasejahtera.'
+    answer: 'Ya! MTs. Al-Rahman menyediakan Program Beasiswa Penuh (Bebas Biaya Pendidikan 100%) untuk penghafal Al-Qur’an minimal 3 Juz mutqin dan peraih Medali Emas/Perak KSM/OSN tingkat Kabupaten/Provinsi/Nasional. Tersedia juga beasiswa afirmasi potongan SPP untuk calon siswa berprestasi dari keluarga prasejahtera.'
   },
   {
     category: 'Proses Pendaftaran',
